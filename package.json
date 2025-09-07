@@ -1,0 +1,30 @@
+{
+  "name": "access-mini",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Type-safe ABAC library with zero runtime dependencies.",
+  "license": "MIT",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bunx tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "test": "bun test --coverage --bail",
+    "typecheck": "bunx tsc -p tsconfig.json --noEmit",
+    "lint": "echo 'add eslint config and devDeps to enable lint' && exit 0",
+    "format": "echo 'add prettier config and devDeps to enable format' && exit 0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.21"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
