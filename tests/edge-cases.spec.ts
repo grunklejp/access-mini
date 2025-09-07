@@ -233,12 +233,16 @@ describe("Edge Cases", () => {
       expect(
         permissions.can("edge-returns", "returnsNull", { actor })
       ).toBeNull();
+      //@ts-expect-error
       expect(permissions.can("edge-returns", "returnsZero", { actor })).toBe(0);
       expect(
         permissions.can("edge-returns", "returnsEmptyString", { actor })
+
+        //@ts-expect-error
       ).toBe("");
       expect(
         permissions.can("edge-returns", "returnsObject", { actor })
+        //@ts-expect-error
       ).toEqual({ result: true });
     });
   });

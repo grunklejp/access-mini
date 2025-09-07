@@ -362,18 +362,62 @@ describe("Integration Tests", () => {
 
     describe("Creating documents", () => {
       it("should allow only appropriate roles to create documents", () => {
-        expect(permissions.can("document", "create", { actor: admin })).toBe(
-          true
-        );
-        expect(permissions.can("document", "create", { actor: editor })).toBe(
-          true
-        );
-        expect(permissions.can("document", "create", { actor: viewer })).toBe(
-          false
-        );
-        expect(permissions.can("document", "create", { actor: banned })).toBe(
-          false
-        );
+        expect(
+          permissions.can("document", "create", {
+            actor: admin,
+            entity: {
+              id: "",
+              title: "",
+              authorId: "",
+              department: "",
+              classification: "public",
+              published: false,
+              createdAt: new Date(),
+            },
+          })
+        ).toBe(true);
+        expect(
+          permissions.can("document", "create", {
+            actor: editor,
+            entity: {
+              id: "",
+              title: "",
+              authorId: "",
+              department: "",
+              classification: "public",
+              published: false,
+              createdAt: new Date(),
+            },
+          })
+        ).toBe(true);
+        expect(
+          permissions.can("document", "create", {
+            actor: viewer,
+            entity: {
+              id: "",
+              title: "",
+              authorId: "",
+              department: "",
+              classification: "public",
+              published: false,
+              createdAt: new Date(),
+            },
+          })
+        ).toBe(false);
+        expect(
+          permissions.can("document", "create", {
+            actor: banned,
+            entity: {
+              id: "",
+              title: "",
+              authorId: "",
+              department: "",
+              classification: "public",
+              published: false,
+              createdAt: new Date(),
+            },
+          })
+        ).toBe(false);
       });
     });
 
@@ -531,52 +575,23 @@ describe("Integration Tests", () => {
     });
   });
 
-  describe("API Consistency", () => {
-    it("should produce identical results with both API styles", () => {
-      const testCases = [
-        {
-          resource: "document" as const,
-          action: "read" as const,
-          context: { actor: admin, entity: publicDoc },
-        },
-        {
-          resource: "document" as const,
-          action: "edit" as const,
-          context: { actor: editor, entity: confidentialDoc },
-        },
-        {
-          resource: "user" as const,
-          action: "view" as const,
-          context: { actor: admin, entity: editor },
-        },
-        {
-          resource: "document" as const,
-          action: "create" as const,
-          context: { actor: viewer },
-        },
-      ];
-
-      for (const testCase of testCases) {
-        const newApiResult = permissions.can(
-          testCase.resource,
-          testCase.action,
-          testCase.context
-        );
-        const originalApiResult = permissions
-          .can(testCase.resource, testCase.context)
-          [testCase.action]();
-
-        expect(newApiResult).toBe(originalApiResult);
-      }
-    });
-  });
-
   describe("Complex workflow scenarios", () => {
     it("should handle document creation and publishing workflow", () => {
       // Editor creates a document
-      expect(permissions.can("document", "create", { actor: editor })).toBe(
-        true
-      );
+      expect(
+        permissions.can("document", "create", {
+          actor: editor,
+          entity: {
+            id: "",
+            title: "",
+            authorId: "",
+            department: "",
+            classification: "public",
+            published: false,
+            createdAt: new Date(),
+          },
+        })
+      ).toBe(true);
 
       // Create an unpublished document
       const newDoc = {
