@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>access-mini - Type-safe ABAC Library</title>
+    <style>
+      :root {
+        --primary-color: #2563eb;
+        --secondary-color: #64748b;
+        --background-color: #f8fafc;
+        --text-color: #1e293b;
+        --code-background: #f1f5f9;
+        --border-color: #e2e8f0;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--background-color);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      header {
+        background: white;
+        border-bottom: 1px solid var(--border-color);
+        padding: 2rem 0;
+        margin-bottom: 3rem;
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+      }
+
+      .badges {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .badge {
+        background: var(--primary-color);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .badge.secondary {
+        background: var(--secondary-color);
+      }
+
+      main {
+        background: white;
+        border-radius: 0.5rem;
+        padding: 3rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        font-size: 1.875rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 0.5rem;
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 2rem 0 1rem 0;
+        color: var(--text-color);
+      }
+
+      p {
+        margin-bottom: 1rem;
+        color: var(--secondary-color);
+      }
+
+      .highlight {
+        background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid var(--primary-color);
+        margin: 1.5rem 0;
+      }
+
+      .highlight p {
+        margin-bottom: 0.5rem;
+      }
+
+      .highlight p:last-child {
+        margin-bottom: 0;
+      }
+
+      pre {
+        background: var(--code-background);
+        border: 1px solid var(--border-color);
+        border-radius: 0.375rem;
+        padding: 1.5rem;
+        overflow-x: auto;
+        margin: 1rem 0;
+        font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas,
+          "Courier New", monospace;
+        font-size: 0.875rem;
+        line-height: 1.5;
+      }
+
+      code {
+        background: var(--code-background);
+        padding: 0.125rem 0.25rem;
+        border-radius: 0.25rem;
+        font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas,
+          "Courier New", monospace;
+        font-size: 0.875rem;
+      }
+
+      pre code {
+        background: none;
+        padding: 0;
+      }
+
+      ul {
+        margin: 1rem 0;
+        padding-left: 2rem;
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+        color: var(--secondary-color);
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+      }
+
+      .feature-card {
+        background: var(--background-color);
+        padding: 1.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-color);
+      }
+
+      .feature-card h4 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--primary-color);
+      }
+
+      .api-section {
+        margin: 2rem 0;
+      }
+
+      .method {
+        background: var(--background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin: 1rem 0;
+      }
+
+      .method-signature {
+        font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas,
+          "Courier New", monospace;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.75rem;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem 0;
+        color: var(--secondary-color);
+        border-top: 1px solid var(--border-color);
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 0 1rem;
+        }
+
+        main {
+          padding: 2rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        pre {
+          padding: 1rem;
+          font-size: 0.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div>
+            <h1>access-mini</h1>
+            <p class="subtitle">
+              Type-safe ABAC (Attribute-Based Access Control) library with zero
+              runtime dependencies
+            </p>
+            <div class="badges">
+              <span class="badge">TypeScript</span>
+              <span class="badge">Zero Dependencies</span>
+              <span class="badge secondary">MIT License</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="container">
+      <main>
+        <section>
+          <h2>Overview</h2>
+          <p>
+            <strong>access-mini</strong> is a lightweight, type-safe library for
+            implementing Attribute-Based Access Control (ABAC) in TypeScript
+            applications. It provides a fluent API for defining and evaluating
+            permissions with full type safety and zero runtime dependencies.
+          </p>
+
+          <div class="highlight">
+            <p>
+              <strong>Perfect for:</strong> Web applications, APIs,
+              microservices, and any system requiring fine-grained access
+              control
+            </p>
+            <p>
+              <strong>Key Benefits:</strong> Full TypeScript support, flexible
+              permission rules, multiple API patterns, and async support
+            </p>
+          </div>
+
+          <div class="features-grid">
+            <div class="feature-card">
+              <h4>🔒 Type-Safe</h4>
+              <p>
+                Full TypeScript support with compile-time validation of
+                resources, actions, and permission contexts.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h4>⚡ Zero Dependencies</h4>
+              <p>
+                No external runtime dependencies. Lightweight and fast with
+                minimal bundle impact.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h4>🎯 Flexible APIs</h4>
+              <p>
+                Support for both fluent builder pattern and direct function
+                calls to fit your coding style.
+              </p>
+            </div>
+            <div class="feature-card">
+              <h4>🔄 Async Ready</h4>
+              <p>
+                Built-in support for asynchronous permission evaluation with
+                database lookups or external services.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Installation</h2>
+          <pre><code>npm install access-mini
+# or
+yarn add access-mini
+# or
+bun add access-mini</code></pre>
+        </section>
+
+        <section>
+          <h2>Quick Start</h2>
+
+          <h3>1. Define Your Types</h3>
+          <pre><code>type User = {
+  id: string;
+  role: 'admin' | 'user' | 'moderator';
+  department: string;
+};
+
+type Post = {
+  id: string;
+  authorId: string;
+  published: boolean;
+  department: string;
+};</code></pre>
+
+          <h3>2. Create Permission Definitions</h3>
+          <pre><code>import { createPermissionDefinition, createPermissions } from 'access-mini';
+
+// Define permissions for posts
+const postPermissions = createPermissionDefinition('post', {
+  // Simple actor-only permission
+  create: ({ actor }: { actor: User }) => 
+    actor.role === 'admin' || actor.role === 'moderator',
+
+  // Permission with actor and entity
+  edit: ({ actor, entity }: { actor: User; entity: Post }) => 
+    actor.role === 'admin' || 
+    (actor.id === entity.authorId && !entity.published),
+
+  // Permission with additional attributes
+  publish: ({ actor, entity, attributes }: { 
+    actor: User; 
+    entity: Post; 
+    attributes: { reason: string } 
+  }) => {
+    if (actor.role === 'admin') return true;
+    if (actor.id === entity.authorId && attributes.reason.length > 10) return true;
+    return false;
+  },
+
+  // Department-based access
+  read: ({ actor, entity }: { actor: User; entity: Post }) =>
+    entity.published || 
+    actor.department === entity.department ||
+    actor.role === 'admin'
+});</code></pre>
+
+          <h3>3. Create the Permissions System</h3>
+          <pre><code>// Initialize with your permission definitions
+const permissions = createPermissions([postPermissions]);
+
+// Example data
+const user = { id: '123', role: 'user' as const, department: 'engineering' };
+const post = { 
+  id: '456', 
+  authorId: '123', 
+  published: false, 
+  department: 'engineering' 
+};</code></pre>
+
+          <h3>4. Check Permissions</h3>
+          <p>access-mini provides three different ways to check permissions:</p>
+
+          <h4>Builder Pattern API (Recommended)</h4>
+          <pre><code>// Fluent, type-safe API
+const canEdit = await permissions
+  .get('post')
+  .can(user)
+  .edit(post);
+
+const canPublish = await permissions
+  .get('post')
+  .can(user)
+  .publish(post, { reason: 'Ready for publication after review' });</code></pre>
+
+          <h4>Direct Action Check</h4>
+          <pre><code>// Check specific action directly
+const canEdit = await permissions.can('post', 'edit', {
+  actor: user,
+  entity: post
+});
+
+const canPublish = await permissions.can('post', 'publish', {
+  actor: user,
+  entity: post,
+  attributes: { reason: 'Ready for publication after review' }
+});</code></pre>
+
+          <h4>Batch Action Check</h4>
+          <pre><code>// Get all actions for a resource
+const postActions = permissions.can('post', { actor: user, entity: post });
+
+const results = {
+  canEdit: await postActions.edit(),
+  canRead: await postActions.read(),
+  // canPublish requires attributes, so call with params
+  canPublish: await permissions.can('post', 'publish', {
+    actor: user,
+    entity: post,
+    attributes: { reason: 'Publishing update' }
+  })
+};</code></pre>
+        </section>
+
+        <section>
+          <h2>Advanced Usage</h2>
+
+          <h3>Async Permission Handlers</h3>
+          <p>
+            Permission handlers can be asynchronous for database lookups or
+            external service calls:
+          </p>
+          <pre><code>const documentPermissions = createPermissionDefinition('document', {
+  read: async ({ actor, entity }: { actor: User; entity: Document }) => {
+    // Check user's access level in database
+    const userAccess = await getUserAccessLevel(actor.id, entity.id);
+    return userAccess >= entity.requiredAccessLevel;
+  },
+
+  share: async ({ actor, entity, attributes }: { 
+    actor: User; 
+    entity: Document; 
+    attributes: { targetUserId: string } 
+  }) => {
+    const canRead = await permissions.can('document', 'read', { actor, entity });
+    const targetUser = await getUser(attributes.targetUserId);
+    return canRead && targetUser.department === actor.department;
+  }
+});</code></pre>
+
+          <h3>Complex Permission Logic</h3>
+          <pre><code>const projectPermissions = createPermissionDefinition('project', {
+  manage: ({ actor, entity }: { actor: User; entity: Project }) => {
+    // Multi-factor permission logic
+    if (actor.role === 'admin') return true;
+    if (entity.ownerId === actor.id) return true;
+    if (entity.collaborators.includes(actor.id) && actor.role === 'moderator') return true;
+    return false;
+  }
+});</code></pre>
+
+          <h3>Multiple Resources</h3>
+          <pre><code>// Define multiple resource types
+const userPermissions = createPermissionDefinition('user', {
+  view: ({ actor }: { actor: User }) => true,
+  edit: ({ actor, entity }: { actor: User; entity: User }) => 
+    actor.role === 'admin' || actor.id === entity.id,
+  delete: ({ actor }: { actor: User }) => actor.role === 'admin'
+});
+
+// Combine multiple permission definitions
+const permissions = createPermissions([
+  postPermissions,
+  userPermissions,
+  documentPermissions,
+  projectPermissions
+]);
+
+// Now you have type-safe access to all resources
+const canEditUser = await permissions.get('user').can(currentUser).edit(targetUser);
+const canManageProject = await permissions.get('project').can(currentUser).manage(project);</code></pre>
+        </section>
+
+        <section class="api-section">
+          <h2>API Reference</h2>
+
+          <div class="method">
+            <div class="method-signature">
+              createPermissionDefinition(resource, handlers)
+            </div>
+            <p>Creates a permission definition for a specific resource.</p>
+            <ul>
+              <li><code>resource</code> - String name of the resource</li>
+              <li>
+                <code>handlers</code> - Object mapping action names to
+                permission handler functions
+              </li>
+            </ul>
+          </div>
+
+          <div class="method">
+            <div class="method-signature">createPermissions(definitions)</div>
+            <p>
+              Creates a permissions system from an array of permission
+              definitions.
+            </p>
+            <ul>
+              <li>
+                <code>definitions</code> - Array of permission definitions
+                created with <code>createPermissionDefinition</code>
+              </li>
+            </ul>
+          </div>
+
+          <div class="method">
+            <div class="method-signature">permissions.get(resource)</div>
+            <p>
+              Gets a resource-specific permission checker for builder-pattern
+              API.
+            </p>
+            <ul>
+              <li>
+                <code>resource</code> - Name of the resource to check
+                permissions for
+              </li>
+            </ul>
+          </div>
+
+          <div class="method">
+            <div class="method-signature">
+              permissions.can(resource, action?, context)
+            </div>
+            <p>
+              Direct permission checking with two overloads for different use
+              cases.
+            </p>
+            <ul>
+              <li><code>resource</code> - Name of the resource</li>
+              <li><code>action</code> - (Optional) Specific action to check</li>
+              <li>
+                <code>context</code> - Object containing actor, entity, and
+                attributes
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>TypeScript Support</h2>
+          <p>
+            access-mini is built with TypeScript-first design. All APIs provide
+            full type safety with intelligent autocomplete and compile-time
+            validation. The library automatically infers types from your
+            permission definitions to ensure you can't make mistakes like
+            checking non-existent actions or passing wrong parameter types.
+          </p>
+
+          <div class="highlight">
+            <p><strong>Type Safety Features:</strong></p>
+            <ul>
+              <li>Resource and action name validation</li>
+              <li>Automatic inference of required vs optional parameters</li>
+              <li>Full IntelliSense support in modern editors</li>
+              <li>Compile-time detection of permission logic errors</li>
+            </ul>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <p>&copy; 2024 access-mini. Released under the MIT License.</p>
+      </footer>
+    </div>
+  </body>
+</html>
