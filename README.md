@@ -147,52 +147,9 @@ Builder pattern API for fluent permission checking.
 
 Direct permission checking with optional action parameter.
 
-## Type Safety
-
-access-mini provides full TypeScript support with:
-
-- ✅ Resource and action name validation
-- ✅ Automatic parameter type inference
-- ✅ IntelliSense support
-- ✅ Compile-time error detection
-
-## Examples
-
-Check out the [`examples/`](./examples/) directory for complete working examples including:
-
-- Basic CRUD permissions
-- Role-based access control
-- Department-based access
-- Async database integration
-- Multi-resource applications
-
-## Development
-
-```bash
-# Install dependencies
-bun install
-
-# Run tests
-bun test --coverage
-
-# Type check
-bun run typecheck
-
-# Build
-bun run build
-```
-
-## Contributing
-
-Contributions are welcome! Please read our [contributing guidelines](./CONTRIBUTING.md) and submit pull requests to our repository.
-
 ## License
 
-MIT © [access-mini](https://github.com/yourusername/access-mini)
-
----
-
-**Documentation:** [Full documentation](./docs/index.html) | **Examples:** [Example applications](./examples/)
+MIT © [access-mini](https://github.com/grunklejp/access-mini)
 
 ---
 

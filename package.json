@@ -1,10 +1,27 @@
 {
   "name": "access-mini",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "type": "module",
-  "private": true,
   "description": "Type-safe ABAC library with zero runtime dependencies.",
+  "keywords": [
+    "typescript",
+    "abac",
+    "permissions",
+    "access-control",
+    "authorization",
+    "security",
+    "type-safe"
+  ],
+  "author": "JP Kiser",
   "license": "MIT",
+  "homepage": "https://github.com/grunklejp/access-mini#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grunklejp/access-mini.git"
+  },
+  "bugs": {
+    "url": "https://github.com/grunklejp/access-mini/issues"
+  },
   "engines": {
     "bun": ">=1.0.0"
   },
@@ -19,7 +36,7 @@
     "test": "bun test --coverage --bail",
     "typecheck": "bunx tsc -p tsconfig.json --noEmit",
     "lint": "echo 'add eslint config and devDeps to enable lint' && exit 0",
-    "format": "echo 'add prettier config and devDeps to enable format' && exit 0"
+    "prepublishOnly": "bun run clean && bun run build && bun run test"
   },
   "devDependencies": {
     "@types/bun": "^1.2.21"
